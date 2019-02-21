@@ -1,0 +1,97 @@
+The purpose of the program is to replicate the program 
+rep and create a program that can search for a 
+query through a given directory.
+
+Acknowledgement: throughout the process of writing 
+this program, 
+I was assisted by the TAs of Comp 15 as well 
+as Dr. Laney Strange. 
+I also consulted multiple online sources such 
+as stackoverflow 
+and cplusplus.com
+
+FILES PROVIDED
+
+driver.cpp: to run the program
+
+HashItem.cpp, HashItem.h: object class to be 
+stored in the HashTable - 
+the words along with their metadata including 
+directory, line number, line
+
+HashTable.h, HashTable.cpp: the object class for the 
+HashTable - the data structure where 
+all the words are to be stored
+
+Index.h, Index.cpp: the index class that create a 
+FSTree where the
+directories are stored. It then traverses the tree,
+ read in all 
+the words in the tree and store them in a 
+Hashtable. It also has 
+a run function that takes in query, search the
+ HashTable and print
+
+Makefile: the make file that execute 
+the program with make gerp
+
+Data structure: HashTable
+HashTable.cpp
+- Implemented using a vector of vector of hash item
+- Get Hash value by calling standard Hash function
+- Expand by creating a new hash table, resize it to 
+twice the size of the original one, rehash all item 
+and copy over
+- Insert by expand if load factor > 0.7, hash the
+ item I want to insert, call the chain vector's
+ pushback function
+- Retrieve by
+	- if case insensitive, return all version with 
+	same lower case
+	- if case sensitive, return if the words match
+	 exactly
+	- if cannot find, return an empty dummy
+
+Index.cpp
+- Traverse the tree recursively (from phase 1)
+	- call the traverse function recursively on all
+	subdirectory of a directory
+	- when a directory has file, populate from that
+	file
+- Populate the hashtable from a file by
+	- Read in line by line
+	- Parse the line into words
+	- Call HashTable insert function on that word
+	- Create a word vector for that line 
+	to avoid inserting duplicate
+- Run function
+	- Create a end of input flag
+	- While loop as long as not flagged
+	- Remove non alphanum when necessary
+	- Read in a word, call hash function 
+	to find the position of its chain
+	- Call Hashtable's retrieve function
+- Remove non-alphanum
+	- iterate through the word, check for nonalphanum
+	- if no nonalphanum, make no change
+	- iterate backward through the word, check for non
+	alphanum
+	- only return alphanum character
+
+
+Tested populate graph:
+- After inserting a word, print to standard out 
+the word a long with its details to make sure it's there
+Test run function:
+- When I miss a line compared to the provided sample 
+out put, I need to identify whether the word was not 
+inserted or was inserted but not retrieve. To do this
+ I fisrt determined whether the word was there by 
+ printing it out right after I insert it. If it's
+  there but not retrieve correctly, I look at my 
+  condition for case sensitive, and check whether I
+   have removed non-alphanumerical symbols appropriately.
+ - test expand function buy running the program on tiny 
+ input, initiate the hash table size to be small to make 
+ sure I need to expand, print the size of the table every 
+ time I insert
